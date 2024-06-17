@@ -26,13 +26,27 @@ ChartJS.register(
     Legend
 );
 
+/**
+ * @MarketData - it will be use to show the market overview in chat 
+ */
 interface MarketData {
-    [key: string]: {
-        price: number;
-        change: number;
-        changesPercentage: number;
-    };
+    price: number;
+    change: number;
+    changesPercentage: number;
+    company: string;
+    code: string;
 }
+
+/**
+ * @HistoricalData - it will be use to show the chat data 
+ * @date : stock date 
+ * @close : closing point of each date 
+ */
+interface HistoricalData {
+    date: string;
+    close: number;
+}
+
 const MarketOverview: React.FC = () => {
     const [marketDatas, setMarketDatas] = useState<MarketData[]>([]);
     const [chartDataPrice, setChartDataPrice] = useState([]);
@@ -40,23 +54,36 @@ const MarketOverview: React.FC = () => {
     const [code, setCode] = useState('');
     const [company, setCompany] = useState('S&P 500');
 
-
+    /**
+     * setMarketDatas is used to set the data of market overview of chat 
+     */
     const getMarketData = async () => {
         const data = await marketOverviewApi();
-        // console.log(typeof data);
-        setMarketDatas(data);
+        setMarketDatas(data ?? []);
     }
 
+    /**
+     * The function `getChartData` fetches historical data for a given stock code and sets the price and
+     * date data for chart rendering.
+     * @param {string} [code=SPY] - The `code` parameter is a string that represents the stock symbol for
+     * which you want to fetch historical data. In the provided function `getChartData`, the default value
+     * for `code` is set to "SPY" if no value is provided when calling the function.
+     * @param {string} day - The `day` parameter in the `getChartData` function is used to specify a
+     * particular day for which historical data will be fetched.
+     */
     const getChartData = async (code: string = "SPY", day: string) => {
         let { historical } = await fetchHistorcialDataApi(code, day);
         console.log(historical);
-        const prices = historical?.map(item => item?.close);
-        const dates = historical?.map(item => item?.date);
+        const prices = historical?.map((item: HistoricalData) => item?.close);
+        const dates = historical?.map((item: HistoricalData) => item?.date);
         setChartDataPrice(prices);
         setCharDataTime(dates);
         setCode(code);
     }
 
+    /**
+     * @data - it is used as props for react chart js 2
+     */
     const data = {
         labels: charDataTime?.reverse(), // Reverse to show latest date first
         datasets: [

@@ -7,6 +7,10 @@ import { marketSentimentApi } from '../Api/MarketData';
 const MarketSentiment: React.FC = () => {
     const [sentiment, setSentiment] = useState('');
     const [summary, setSummary] = useState('');
+    /**
+     * This function fetches market sentiment data from an API and sets the sentiment and summary state
+     * based on the retrieved data.
+     */
     const getMarketSentiMent = async () => {
         const { feed } = await marketSentimentApi();
         const { overall_sentiment_label, summary } = feed[0];

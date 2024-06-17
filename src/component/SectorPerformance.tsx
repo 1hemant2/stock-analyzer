@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Card } from 'antd';
 import { sectorPerformanceApi } from '../Api/MarketData';
 
+/* The `interface SectorData` is defining a TypeScript interface in the React component
+`SectorPerformance`. This interface specifies the structure of objects that will be stored in the
+`sectorData` state array. */
 interface SectorData {
     sector: string;
     changesPercentage: string;
 }
 
+/* This code snippet is a React functional component named `SectorPerformance`. Here's what it's doing: */
 const SectorPerformance: React.FC = () => {
     const [sectorData, setSecotorData] = useState<SectorData[]>([]);
     const getSectorPerformance = async () => {
